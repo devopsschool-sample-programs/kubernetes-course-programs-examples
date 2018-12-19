@@ -1,0 +1,54 @@
+=================== M6-03
+### Wrapping the hello-rc Replication Controller in a Service - the iterative way
+
+$ kubectl expose rc hello-rc --name=hello.svc --target-port=800 --type=NodePort
+
+$ kubectl describe svc hello-svc
+
+
+=================== M6-04
+### Wrapping the hello-rc Replication Controller in a Service - the iterative way
+
+### The following commands get the current list of Services and then delete the Service called "hello-svc"
+$ kubectl get svc
+$ kubectl delete svc hello-svc
+
+### The following commands list the "app" label attached to all running Pods and then print the contents of the "svc.yml" manifest file to the screen
+$ kubectl describe pods | grep app
+$ cat svc.yml
+
+### The following command deploys a new Service from the "svc.yml". The YAML file is shown at the bottom of this document
+$ kubectl create -f svc.yml
+
+### The following commands list all running Services and then describe the Service called "hello-svc"
+$ kubectl get svc
+$ kubectl describe svc hello-svc				
+
+### The following commands list all Endpoint objects on the cluster and then describes the Endpoint object called "hello-svc"
+kubectl get ep
+kubectl describe ep hello-svc
+
+### The following is the "svc.yml" file used in the module
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-svc
+  labels:
+    app: hello-world
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 30001
+    protocol: TCP
+  selector:
+    app: hello-world
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,3 @@
+$ aws efs create-file-systemm --creation-token 2
+$ aws efs create-mount-target --file-system-id <<file-system-id>> --subnet-id <<>> --security-groups << >>
+# Same SUBNET 

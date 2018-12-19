@@ -1,0 +1,10 @@
+kubectl create configmap ngnix --from-file=reverseproxy.conf
+kubectl get configmap
+kubectl get configmap nginx-config -o yaml
+kubectl create -f nginx.yaml
+kubectl create -f nginx-service.yml
+kubectl service helloworld-nginx-service --url
+kubectl get pods
+curl http.... -vvvv
+kubectl exec -i -t helloworld-nginx -c nginx -- bash
+cat /etc/nginx/conf.d/reverseproxy.conf

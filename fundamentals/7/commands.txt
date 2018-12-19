@@ -1,0 +1,127 @@
+#### m7-03
+kubectl delete rc hello-rc
+kubectl get pods
+
+kubectl describe svc hello-svc
+
+vim deploy.yml
+
+kubectl create deployment
+
+kubectl describe deploy hello-deploy
+
+kubectl get rs
+
+kubectl describe rs 
+
+
+#### m7-04
+kubectl apply -f deploy.yml --record
+
+kubectl get deploy
+
+kubectl rollout status deployments hello-deploy
+
+kubectl get deploy hello-deploy
+
+kubectl rollout history deployments hello-deploy
+
+kubectl get rs
+
+kubectl describe deploy hello-deploy
+
+kubectl rollout undo deployment hello-deploy --to-revision=1
+
+kubectl get deploy
+
+kubectl rollout status deployments hello-deploy
+
+
+################# Final deployment YAML file used
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-deploy
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-pod
+        image: scmgalaxy/devopsschool:v1
+        ports:
+        - containerPort: 8080
+
+################# Final deployment YAML file used
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-deploy
+spec:
+  replicas: 4
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-pod
+        image: scmgalaxy/devopsschool:v2
+        ports:
+        - containerPort: 8080
+===============================================
+$ echo 'apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: deployment-example
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.10
+        ports:
+        - containerPort: 80
+' | kubectl create -f -
+
+
+$ kubectl patch deployment deployment-example -p \
+    '{"spec":{"template":{"spec":{"containers":[{"name":"nginx","image":"nginx:1.11"}]}}}}'
+
+
+$ echo 'apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: deployment-example
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.11
+        ports:
+        - containerPort: 80
+' | kubectl replace -f 
+
+$ kubectl delete deployment deployment-example
+
+
